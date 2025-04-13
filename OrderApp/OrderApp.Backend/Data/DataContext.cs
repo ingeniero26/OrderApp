@@ -8,12 +8,13 @@ namespace OrderApp.Backend.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
-       // public DbSet<BranchType> BranchTypes { get; set; } = null!;
+       public DbSet<BranchType> BranchTypes { get; set; } = null!;
         public DbSet<Country> Countries { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<BranchType>().HasIndex(b => b.Name).IsUnique();
         }
     }
     
