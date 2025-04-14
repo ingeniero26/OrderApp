@@ -44,7 +44,7 @@ namespace OrderApp.Backend.Controllers
         {
             _context.Update(branchType);
             await _context.SaveChangesAsync();
-            return Ok(branchType);
+            return NoContent();
         }
         //eliminar
         [HttpDelete("{id}")]
@@ -57,7 +57,7 @@ namespace OrderApp.Backend.Controllers
             }
             _context.Remove(branchType);
             await _context.SaveChangesAsync();
-            return Ok(branchType);
+            return NoContent();
         }
     }
 }

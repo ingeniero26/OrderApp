@@ -49,7 +49,7 @@ namespace OrderApp.Backend.Controllers
         {
             _context.Update(country);
             await _context.SaveChangesAsync();
-            return Ok(country);
+            return NoContent();
         }
         //eliminar
         [HttpDelete("{id}")]
