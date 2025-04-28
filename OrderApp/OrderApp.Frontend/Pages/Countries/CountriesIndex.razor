@@ -1,0 +1,46 @@
+﻿@page "/countries"
+
+@inject IRepository repository
+<h3>Paises</h3>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/countries/create">Nuevo País</a>
+</div>
+<hr />
+<table class="table table-bordered table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach( var item in Countries!)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+
+                <td>
+                   <a class="btn btn-outline-warning">Editar</a>|
+                    <a class="btn btn-outline-danger">Eliminar</a>
+                </td>
+            </tr>
+            
+        }
+
+    </tbody>
+</table>
+
+
+
+@code {
+    public List<Country>? Countries { get; set; } = new List<Country>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await repository.GetAsync<List<Country>>("api/countries");
+        Countries = responseHttp.Response;
+    }
+}
