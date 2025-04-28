@@ -1,10 +1,87 @@
 ﻿@page "/branchtypes"
+@inject IRepository repository
 
-<h3>Tipo Sucursales</h3>
-<div class="mb-3">
-    <a class="btn btn-primary" href="/branchtypes/create">Nuevo </a>
+<h3 class="mb-4">Tipos de Sucursales</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a class="btn btn-primary" href="/branchtypes/create">
+        <i class="bi bi-plus-circle"></i> Nuevo
+    </a>
 </div>
 
-@code {
+@if (BranchType == null)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2">Cargando datos...</p>
+    </div>
+}
+else if (!BranchType.Any())
+{
+    <div class="alert alert-warning text-center" role="alert">
+        No hay tipos de sucursales disponibles.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in BranchType)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-outline-warning me-2" href="/branchtypes/edit/@item.Id">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
+@code {
+    public List<BranchType>? BranchType { get; set; }
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var responseHttp = await repository.GetAsync<List<BranchType>>("api/BranchesType");
+            BranchType = responseHttp.Response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los datos: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // private async Task DeleteBranchType(int id)
+    // {
+    //     var confirm = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Estás seguro de que deseas eliminar el tipo de sucursal con Id {id}?");
+    //     if (confirm)
+    //     {
+    //         // Lógica para eliminar el tipo de sucursal
+    //         Console.WriteLine($"Eliminando tipo de sucursal con Id {id}");
+    //     }
+    // }
 }
