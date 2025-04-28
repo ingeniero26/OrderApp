@@ -1,83 +1,52 @@
 ﻿@page "/countries"
 
-@inject IRepository repository
-
 <h3 class="mb-4">Países</h3>
-
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <a class="btn btn-primary" href="/countries/create">
-        <i class="bi bi-plus-circle"></i> Nuevo País
-    </a>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/countries/create">Nuevo País</a>
 </div>
 
-@if (Countries == null)
-{
-    <div class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
+<GenericList MyList="Countries">
+    <Loading>
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando datos...</p>
         </div>
-        <p class="mt-2">Cargando datos...</p>
-    </div>
-}
-else if (!Countries.Any())
-{
-    <div class="alert alert-warning text-center" role="alert">
-        No hay países disponibles.
-    </div>
-}
-else
-{
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Countries)
-            {
+        </Loading>
+    <Body>
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <td>@item.Id</td>
-                    <td>@item.Name</td>
-                    <td class="text-center">
-                        <a class="btn btn-sm btn-outline-warning me-2" href="/countries/edit/@item.Id">
-                            <i class="bi bi-pencil-square"></i> Editar
-                        </a>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </button>
-                    </td>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var item in Countries)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name</td>
+                        <td class="text-center">
+                            <a class="btn btn-sm btn-outline-warning me-2" href="/countries/edit/@item.Id">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
 
-@code {
-    public List<Country>? Countries { get; set; } = new List<Country>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var responseHttp = await repository.GetAsync<List<Country>>("api/countries");
-            Countries = responseHttp.Response;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al cargar los datos: {ex.Message}");
-        }
-    }
 
-    // private async Task DeleteCountry(int id)
-    // {
-    //     var confirm = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Estás seguro de que deseas eliminar el país con Id {id}?");
-    //     if (confirm)
-    //     {
-    //         // Lógica para eliminar el país
-    //         Console.WriteLine($"Eliminando país con Id {id}");
-    //     }
-    // }
-}
+
+ 
+
+   
